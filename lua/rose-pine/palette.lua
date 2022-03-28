@@ -15,6 +15,8 @@ local variants = {
 		highlight_low = '#21202e',
 		highlight_med = '#403d52',
 		highlight_high = '#524f67',
+		opacity = 0.1,
+		none = 'NONE',
 	},
 	moon = {
 		base = '#232136',
@@ -32,11 +34,13 @@ local variants = {
 		highlight_low = '#2a283e',
 		highlight_med = '#44415a',
 		highlight_high = '#56526e',
+		opacity = 0.1,
+		none = 'NONE',
 	},
 	dawn = {
 		base = '#faf4ed',
 		surface = '#fffaf3',
-		overlay = '#f2e9de',
+		overlay = '#f2e9e1',
 		muted = '#9893a5',
 		subtle = '#797593',
 		text = '#575279',
@@ -49,17 +53,17 @@ local variants = {
 		highlight_low = '#f4ede8',
 		highlight_med = '#dfdad9',
 		highlight_high = '#cecacd',
+		opacity = 0.05,
+		none = 'NONE',
 	},
 }
 
-local palette = variants.main
+local palette = {}
 
-if string.match(vim.g.rose_pine_variant or '', 'moon') then
-	palette = variants.moon
-elseif string.match(vim.g.rose_pine_variant or '', 'dawn') then
+if vim.o.background == 'light' then
 	palette = variants.dawn
+else
+	palette = variants[(vim.g.rose_pine_variant == 'moon' and 'moon') or 'main']
 end
-
-vim.tbl_deep_extend('force', palette, { none = 'NONE' })
 
 return palette

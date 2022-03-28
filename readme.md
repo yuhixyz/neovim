@@ -17,7 +17,7 @@
 use({
     'rose-pine/neovim',
     as = 'rose-pine',
-    tag = 'v0.1.0', -- Optional tag release
+    tag = 'v1.*',
     config = function()
         vim.cmd('colorscheme rose-pine')
     end
@@ -28,29 +28,43 @@ use({
 
 > PR's are more than welcome if your favourite plugin is missing
 
-- **[Treesitter](https://github.com/nvim-treesitter/nvim-treesitter)**
-- **[Diagnostics](https://neovim.io/doc/user/lsp.html)**
-- **[Barbar](https://github.com/romgrk/barbar.nvim)**
-- **[Gitsigns](https://github.com/lewis6991/gitsigns.nvim)**
-- **[Modes](https://github.com/mvllow/modes.nvim)**
-- **[NvimTree](https://github.com/kyazdani42/nvim-tree.lua)**
-- **[WhichKey](https://github.com/folke/which-key.nvim)**
-- **[Indent-Blankline.nvim](https://github.com/lukas-reineke/indent-blankline.nvim)**
-- **[Neogit](https://github.com/TimUntersberger/neogit)**
-- **[Neorg](https://github.com/nvim-neorg/neorg)**
-- **[Lspsaga](https://github.com/tami5/lspsaga.nvim)**
-- **[Lualine](https://github.com/hoob3rt/lualine.nvim)**
-  ```lua
-  require('lualine').setup({
-      options = { theme = 'rose-pine' }
-  })
-  ```
-- **[Galaxyline fork](https://github.com/NTBBloodbath/galaxyline.nvim)**
-  > This fork by NTBBloodbath allows [custom colors](https://github.com/NTBBloodbath/galaxyline.nvim/blob/main/docs/themes.md#colors-standards)
-  ```lua
-  -- Set colors in your galaxyline config
-  local colors = require("galaxyline.themes.colors")["rose-pine"]
-  ```
+- [neovim diagnostics](https://neovim.io/doc/user/lsp.html)
+- [nvim-treesitter](https://github.com/nvim-treesitter/nvim-treesitter)
+- [barbar.nvim](https://github.com/romgrk/barbar.nvim)
+- [gitsigns.nvim](https://github.com/lewis6991/gitsigns.nvim)
+- [modes.nvim](https://github.com/mvllow/modes.nvim)
+- [nvim-tree.lua](https://github.com/kyazdani42/nvim-tree.lua)
+- [which-key.nvim](https://github.com/folke/which-key.nvim)
+- [indent-blankline.nvim](https://github.com/lukas-reineke/indent-blankline.nvim)
+- [neogit](https://github.com/TimUntersberger/neogit)
+- [neorg](https://github.com/nvim-neorg/neorg)
+- [lspsaga.nvim](https://github.com/tami5/lspsaga.nvim)
+- [pounce.nvim](https://github.com/rlane/pounce.nvim)
+- [telescope.nvim](https://github.com/nvim-telescope/telescope.nvim)
+- [nvim-notify](https://github.com/rcarriga/nvim-notify)
+- [lualine.nvim](https://github.com/nvim-lualine/lualine.nvim)
+
+```lua
+use({
+	'nvim-lualine/lualine.nvim',
+	-- fix mismatch palette between variants
+	event = 'ColorScheme',
+	config = function()
+		require('lualine').setup({
+			options = {
+				---@usage 'rose-pine' | 'rose-pine-alt'
+				theme = 'rose-pine'
+			}
+		})
+	end
+})
+```
+
+- [galaxyline.nvim fork](https://github.com/NTBBloodbath/galaxyline.nvim)
+
+```lua
+local colors = require("galaxyline.themes.colors")["rose-pine"]
+```
 
 ## Gallery
 
@@ -70,67 +84,46 @@ use({
 
 > Options should be set **before** colorscheme
 
+Variant now respects `vim.o.background`, using dawn when light (`vim.cmd("set background=light")`) and dark_variant when dark
+
 ```lua
--- Set theme variant
--- Matches terminal theme if unset
--- @usage 'main' | 'moon' | 'dawn'
-vim.g.rose_pine_variant = ''
+require('rose-pine').setup({
+	---@usage 'main'|'moon'
+	dark_variant = 'main',
+	bold_vert_split = false,
+	dim_nc_background = false,
+	disable_background = false,
+	disable_float_background = false,
+	disable_italics = false,
+	---@usage string hex value or named color from rosepinetheme.com/palette
+	groups = {
+		background = 'base',
+		panel = 'surface',
+		border = 'highlight_med',
+		comment = 'muted',
+		link = 'iris',
+		punctuation = 'subtle',
 
-vim.g.rose_pine_bold_vertical_split_line = false
-vim.g.rose_pine_inactive_background = false
-vim.g.rose_pine_disable_background = false
-vim.g.rose_pine_disable_float_background = false
-vim.g.rose_pine_disable_italics = false
+		error = 'love',
+		hint = 'iris',
+		info = 'foam',
+		warn = 'gold',
 
-local p = require('rose-pine.palette')
-vim.g.rose_pine_colors = {
-	punctuation = p.subtle,
-	comment = p.subtle,
-	hint = p.iris,
-	info = p.foam,
-	warn = p.gold,
-	error = p.love,
+		headings = {
+			h1 = 'iris',
+			h2 = 'foam',
+			h3 = 'rose',
+			h4 = 'gold',
+			h5 = 'pine',
+			h6 = 'foam',
+		}
+		-- or set all headings at once
+		-- headings = 'subtle'
+	}
+})
 
-	-- Or set all headings to one colour: `headings = p.text`
-	headings = {
-		h1 = p.iris,
-		h2 = p.foam,
-		h3 = p.rose,
-		h4 = p.gold,
-		h5 = p.pine,
-		h6 = p.foam,
-	},
-}
-
--- Set colorscheme after options
+-- set colorscheme after options
 vim.cmd('colorscheme rose-pine')
-```
-
-## Functions
-
-```lua
--- Toggle between all variants
-require('rose-pine').toggle()
-
--- Toggle between some variants
-require('rose-pine').toggle({'main', 'dawn'})
-
--- Set specific variant
-require('rose-pine').set('moon')
-```
-
-## Keymaps
-
-> These are only suggestions; no keymaps are set by the theme
-
-```lua
--- Toggle variants
-vim.api.nvim_set_keymap('n', '<c-m>', [[<cmd>lua require('rose-pine').toggle()<cr>]], { noremap = true, silent = true })
-
--- Set variant
-vim.api.nvim_set_keymap('n', '<c-0>', [[<cmd>lua require('rose-pine').set('main')<cr>]], { noremap = true, silent = true })
-vim.api.nvim_set_keymap('n', '<c-9>', [[<cmd>lua require('rose-pine').set('moon')<cr>]], { noremap = true, silent = true })
-vim.api.nvim_set_keymap('n', '<c-8>', [[<cmd>lua require('rose-pine').set('dawn')<cr>]], { noremap = true, silent = true })
 ```
 
 ## Contributing
